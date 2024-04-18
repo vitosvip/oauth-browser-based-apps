@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-04-16T00:04:28.918007+00:00",
+  "timestamp": "2024-04-18T00:05:04.106015+00:00",
   "repo": "oauth-wg/oauth-browser-based-apps",
   "labels": [
     {
@@ -3430,6 +3430,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 50,
+      "id": "PR_kwDOCUe3lM5s3NBN",
+      "title": "feat: narrowing ascii-art and adding svg support",
+      "url": "https://github.com/oauth-wg/oauth-browser-based-apps/pull/50",
+      "state": "OPEN",
+      "author": "duncanwd",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Resolves #49\r\n\r\n1. Narrows the existing ASCII diagrams to 72 characters for better plain-text layout.\r\n2. Extracts the narrowed ASCII art into separate files.\r\n3. Modifies the markdown to invoke aasvg for automated SVG generation and inclusion in the HTML version\r\n\r\n**Note:** The aasvg npm package must be installed for the Makefile to function correctly. See the instructions link at the bottom of the main README.md for the install procedure.\r\n\r\nPlease check for errors in the modified ASCII diagrams, figure labels, and figure titles.",
+      "createdAt": "2024-04-17T01:43:57Z",
+      "updatedAt": "2024-04-17T15:18:01Z",
+      "baseRepository": "oauth-wg/oauth-browser-based-apps",
+      "baseRefName": "main",
+      "baseRefOid": "741f8820be57a2a29c60d7713b5655031279a04a",
+      "headRepository": "duncanwd/oauth-browser-based-apps",
+      "headRefName": "feature/artwork",
+      "headRefOid": "ab3750d2d0592b55fdc506bee9b1e84af2d422a3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
