@@ -1613,35 +1613,92 @@ usually written in JavaScript. Also sometimes referred to as a "single-page appl
           <h4 id="name-application-architecture">
 <a href="#section-6.1.1" class="section-number selfRef">6.1.1. </a><a href="#name-application-architecture" class="section-name selfRef">Application Architecture</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-6.1.1-1">
-<pre>
-                            +-------------+  +--------------+ +--------------+
-                            |             |  |              | |              |
-                            |Authorization|  |    Token     | |   Resource   |
-                            |  Endpoint   |  |   Endpoint   | |    Server    |
-                            |             |  |              | |              |
-                            +-------------+  +--------------+ +--------------+
-
-                                ^                        ^              ^
-                                |                     (F)|           (K)|
-                                |                        v              v
-
-                                |         +-----------------------------------+
-                                |         |                                   |
-                                |         |    Backend for Frontend  (BFF)    |
-                             (D)|         |                                   |
-                                |         +-----------------------------------+
-                                |
-                                |           ^     ^     ^     +       ^  +
-                                |      (B,I)|  (C)|  (E)|  (G)|    (J)|  |(L)
-                                v           v     v     +     v       +  v
-
-+-----------------+         +-------------------------------------------------+
-|                 |  (A,H)  |                                                 |
-| Static Web Host | +-----&gt; |                    Browser                      |
-|                 |         |                                                 |
-+-----------------+         +-------------------------------------------------+
-</pre><a href="#section-6.1.1-1" class="pilcrow">¶</a>
+<span id="name-oauth-20-bff-pattern"></span><div id="fig-bbapp-pattern-bff">
+<figure id="figure-1">
+            <div id="section-6.1.1-1.1">
+              <div class="alignLeft art-svg artwork" id="section-6.1.1-1.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="448" width="576" viewBox="0 0 576 448" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                  <path d="M 8,368 L 8,432" fill="none" stroke="black"></path>
+                  <path d="M 152,368 L 152,432" fill="none" stroke="black"></path>
+                  <path d="M 184,32 L 184,112" fill="none" stroke="black"></path>
+                  <path d="M 232,368 L 232,432" fill="none" stroke="black"></path>
+                  <path d="M 256,144 L 256,336" fill="none" stroke="black"></path>
+                  <path d="M 288,208 L 288,272" fill="none" stroke="black"></path>
+                  <path d="M 312,32 L 312,112" fill="none" stroke="black"></path>
+                  <path d="M 320,304 L 320,336" fill="none" stroke="black"></path>
+                  <path d="M 368,32 L 368,112" fill="none" stroke="black"></path>
+                  <path d="M 368,304 L 368,336" fill="none" stroke="black"></path>
+                  <path d="M 416,144 L 416,176" fill="none" stroke="black"></path>
+                  <path d="M 416,304 L 416,336" fill="none" stroke="black"></path>
+                  <path d="M 456,32 L 456,112" fill="none" stroke="black"></path>
+                  <path d="M 464,304 L 464,336" fill="none" stroke="black"></path>
+                  <path d="M 480,32 L 480,112" fill="none" stroke="black"></path>
+                  <path d="M 512,304 L 512,336" fill="none" stroke="black"></path>
+                  <path d="M 520,144 L 520,176" fill="none" stroke="black"></path>
+                  <path d="M 536,208 L 536,272" fill="none" stroke="black"></path>
+                  <path d="M 536,304 L 536,336" fill="none" stroke="black"></path>
+                  <path d="M 568,32 L 568,112" fill="none" stroke="black"></path>
+                  <path d="M 568,368 L 568,432" fill="none" stroke="black"></path>
+                  <path d="M 184,32 L 312,32" fill="none" stroke="black"></path>
+                  <path d="M 368,32 L 456,32" fill="none" stroke="black"></path>
+                  <path d="M 480,32 L 568,32" fill="none" stroke="black"></path>
+                  <path d="M 184,112 L 312,112" fill="none" stroke="black"></path>
+                  <path d="M 368,112 L 456,112" fill="none" stroke="black"></path>
+                  <path d="M 480,112 L 568,112" fill="none" stroke="black"></path>
+                  <path d="M 288,208 L 536,208" fill="none" stroke="black"></path>
+                  <path d="M 288,272 L 536,272" fill="none" stroke="black"></path>
+                  <path d="M 8,368 L 152,368" fill="none" stroke="black"></path>
+                  <path d="M 232,368 L 568,368" fill="none" stroke="black"></path>
+                  <path d="M 168,400 L 216,400" fill="none" stroke="black"></path>
+                  <path d="M 8,432 L 152,432" fill="none" stroke="black"></path>
+                  <path d="M 232,432 L 568,432" fill="none" stroke="black"></path>
+                  <polygon class="arrowhead" points="544,336 532,330.4 532,341.6" fill="black" transform="rotate(90,536,336)"></polygon>
+                  <polygon class="arrowhead" points="528,176 516,170.4 516,181.6" fill="black" transform="rotate(90,520,176)"></polygon>
+                  <polygon class="arrowhead" points="528,144 516,138.4 516,149.6" fill="black" transform="rotate(270,520,144)"></polygon>
+                  <polygon class="arrowhead" points="520,304 508,298.4 508,309.6" fill="black" transform="rotate(270,512,304)"></polygon>
+                  <polygon class="arrowhead" points="472,336 460,330.4 460,341.6" fill="black" transform="rotate(90,464,336)"></polygon>
+                  <polygon class="arrowhead" points="424,304 412,298.4 412,309.6" fill="black" transform="rotate(270,416,304)"></polygon>
+                  <polygon class="arrowhead" points="424,176 412,170.4 412,181.6" fill="black" transform="rotate(90,416,176)"></polygon>
+                  <polygon class="arrowhead" points="424,144 412,138.4 412,149.6" fill="black" transform="rotate(270,416,144)"></polygon>
+                  <polygon class="arrowhead" points="376,336 364,330.4 364,341.6" fill="black" transform="rotate(90,368,336)"></polygon>
+                  <polygon class="arrowhead" points="376,304 364,298.4 364,309.6" fill="black" transform="rotate(270,368,304)"></polygon>
+                  <polygon class="arrowhead" points="328,336 316,330.4 316,341.6" fill="black" transform="rotate(90,320,336)"></polygon>
+                  <polygon class="arrowhead" points="328,304 316,298.4 316,309.6" fill="black" transform="rotate(270,320,304)"></polygon>
+                  <polygon class="arrowhead" points="264,336 252,330.4 252,341.6" fill="black" transform="rotate(90,256,336)"></polygon>
+                  <polygon class="arrowhead" points="264,144 252,138.4 252,149.6" fill="black" transform="rotate(270,256,144)"></polygon>
+                  <polygon class="arrowhead" points="224,400 212,394.4 212,405.6" fill="black" transform="rotate(0,216,400)"></polygon>
+                  <g class="text">
+                    <text x="248" y="68">Authorization</text>
+                    <text x="408" y="68">Token</text>
+                    <text x="524" y="68">Resource</text>
+                    <text x="244" y="84">Endpoint</text>
+                    <text x="412" y="84">Endpoint</text>
+                    <text x="524" y="84">Server</text>
+                    <text x="400" y="164">(F)</text>
+                    <text x="504" y="164">(K)</text>
+                    <text x="336" y="244">Backend</text>
+                    <text x="384" y="244">for</text>
+                    <text x="436" y="244">Frontend</text>
+                    <text x="496" y="244">(BFF)</text>
+                    <text x="240" y="260">(D)</text>
+                    <text x="296" y="324">(B,I)</text>
+                    <text x="352" y="324">(C)</text>
+                    <text x="400" y="324">(E)</text>
+                    <text x="448" y="324">(G)</text>
+                    <text x="496" y="324">(J)</text>
+                    <text x="552" y="324">(L)</text>
+                    <text x="192" y="388">(A,H)</text>
+                    <text x="44" y="404">Static</text>
+                    <text x="88" y="404">Web</text>
+                    <text x="124" y="404">Host</text>
+                    <text x="400" y="404">Browser</text>
+                  </g>
+                </svg><a href="#section-6.1.1-1.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-oauth-20-bff-pattern" class="selfRef">OAuth 2.0 BFF Pattern</a>
+            </figcaption></figure>
 </div>
 <p id="section-6.1.1-2">In this architecture, the JavaScript code is first loaded from a static web host into the browser (A), and the application then runs in the browser. The application checks with the BFF if there is an active session by calling a "check session" API endpoint (B). If an active session is found, the application resumes its authenticated state and skips forward to step J.<a href="#section-6.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1.1-3">When no active session is found, the JavaScript application triggers a navigation to the BFF (C) to initiate the Authorization Code grant type with the PKCE
@@ -1898,35 +1955,84 @@ extension (described in <a href="#pattern-bff-flow" class="auto internal xref">S
           <h4 id="name-application-architecture-2">
 <a href="#section-6.2.1" class="section-number selfRef">6.2.1. </a><a href="#name-application-architecture-2" class="section-name selfRef">Application Architecture</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-6.2.1-1">
-<pre>
-                            +-------------+  +--------------+ +--------------+
-                            |             |  |              | |              |
-                            |Authorization|  |    Token     | |   Resource   |
-                            |  Endpoint   |  |   Endpoint   | |    Server    |
-                            |             |  |              | |              |
-                            +-------------+  +--------------+ +--------------+
-
-                                ^                   ^                 ^
-                                |                (F)|                 |
-                                |                   v                 |
-                                                                      |
-                                |   +-----------------------+         |
-                                |   |                       |         |
-                                |   |Token-Mediating Backend|         | (J)
-                             (D)|   |                       |         |
-                                |   +-----------------------+         |
-                                |                                     |
-                                |       ^     ^     ^     +           |
-                                |  (B,I)|  (C)|  (E)|  (G)|           |
-                                v       v     v     +     v           v
-
-+-----------------+         +-------------------------------------------------+
-|                 |  (A,H)  |                                                 |
-| Static Web Host | +-----&gt; |                    Browser                      |
-|                 |         |                                                 |
-+-----------------+         +-------------------------------------------------+
-</pre><a href="#section-6.2.1-1" class="pilcrow">¶</a>
+<span id="name-oauth-20-tmb-pattern"></span><div id="fig-bbapp-pattern-tmb">
+<figure id="figure-2">
+            <div id="section-6.2.1-1.1">
+              <div class="alignLeft art-svg artwork" id="section-6.2.1-1.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="448" width="576" viewBox="0 0 576 448" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                  <path d="M 8,368 L 8,432" fill="none" stroke="black"></path>
+                  <path d="M 152,368 L 152,432" fill="none" stroke="black"></path>
+                  <path d="M 184,32 L 184,112" fill="none" stroke="black"></path>
+                  <path d="M 232,368 L 232,432" fill="none" stroke="black"></path>
+                  <path d="M 256,144 L 256,336" fill="none" stroke="black"></path>
+                  <path d="M 288,208 L 288,272" fill="none" stroke="black"></path>
+                  <path d="M 312,32 L 312,112" fill="none" stroke="black"></path>
+                  <path d="M 320,304 L 320,336" fill="none" stroke="black"></path>
+                  <path d="M 368,32 L 368,112" fill="none" stroke="black"></path>
+                  <path d="M 368,304 L 368,336" fill="none" stroke="black"></path>
+                  <path d="M 416,144 L 416,176" fill="none" stroke="black"></path>
+                  <path d="M 416,304 L 416,336" fill="none" stroke="black"></path>
+                  <path d="M 456,32 L 456,112" fill="none" stroke="black"></path>
+                  <path d="M 464,304 L 464,336" fill="none" stroke="black"></path>
+                  <path d="M 480,32 L 480,112" fill="none" stroke="black"></path>
+                  <path d="M 512,208 L 512,272" fill="none" stroke="black"></path>
+                  <path d="M 536,144 L 536,336" fill="none" stroke="black"></path>
+                  <path d="M 568,32 L 568,112" fill="none" stroke="black"></path>
+                  <path d="M 568,368 L 568,432" fill="none" stroke="black"></path>
+                  <path d="M 184,32 L 312,32" fill="none" stroke="black"></path>
+                  <path d="M 368,32 L 456,32" fill="none" stroke="black"></path>
+                  <path d="M 480,32 L 568,32" fill="none" stroke="black"></path>
+                  <path d="M 184,112 L 312,112" fill="none" stroke="black"></path>
+                  <path d="M 368,112 L 456,112" fill="none" stroke="black"></path>
+                  <path d="M 480,112 L 568,112" fill="none" stroke="black"></path>
+                  <path d="M 288,208 L 512,208" fill="none" stroke="black"></path>
+                  <path d="M 288,272 L 512,272" fill="none" stroke="black"></path>
+                  <path d="M 8,368 L 152,368" fill="none" stroke="black"></path>
+                  <path d="M 232,368 L 568,368" fill="none" stroke="black"></path>
+                  <path d="M 168,400 L 216,400" fill="none" stroke="black"></path>
+                  <path d="M 8,432 L 152,432" fill="none" stroke="black"></path>
+                  <path d="M 232,432 L 568,432" fill="none" stroke="black"></path>
+                  <polygon class="arrowhead" points="544,336 532,330.4 532,341.6" fill="black" transform="rotate(90,536,336)"></polygon>
+                  <polygon class="arrowhead" points="544,144 532,138.4 532,149.6" fill="black" transform="rotate(270,536,144)"></polygon>
+                  <polygon class="arrowhead" points="472,336 460,330.4 460,341.6" fill="black" transform="rotate(90,464,336)"></polygon>
+                  <polygon class="arrowhead" points="424,304 412,298.4 412,309.6" fill="black" transform="rotate(270,416,304)"></polygon>
+                  <polygon class="arrowhead" points="424,176 412,170.4 412,181.6" fill="black" transform="rotate(90,416,176)"></polygon>
+                  <polygon class="arrowhead" points="424,144 412,138.4 412,149.6" fill="black" transform="rotate(270,416,144)"></polygon>
+                  <polygon class="arrowhead" points="376,336 364,330.4 364,341.6" fill="black" transform="rotate(90,368,336)"></polygon>
+                  <polygon class="arrowhead" points="376,304 364,298.4 364,309.6" fill="black" transform="rotate(270,368,304)"></polygon>
+                  <polygon class="arrowhead" points="328,336 316,330.4 316,341.6" fill="black" transform="rotate(90,320,336)"></polygon>
+                  <polygon class="arrowhead" points="328,304 316,298.4 316,309.6" fill="black" transform="rotate(270,320,304)"></polygon>
+                  <polygon class="arrowhead" points="264,336 252,330.4 252,341.6" fill="black" transform="rotate(90,256,336)"></polygon>
+                  <polygon class="arrowhead" points="264,144 252,138.4 252,149.6" fill="black" transform="rotate(270,256,144)"></polygon>
+                  <polygon class="arrowhead" points="224,400 212,394.4 212,405.6" fill="black" transform="rotate(0,216,400)"></polygon>
+                  <g class="text">
+                    <text x="248" y="68">Authorization</text>
+                    <text x="408" y="68">Token</text>
+                    <text x="524" y="68">Resource</text>
+                    <text x="244" y="84">Endpoint</text>
+                    <text x="412" y="84">Endpoint</text>
+                    <text x="524" y="84">Server</text>
+                    <text x="400" y="164">(F)</text>
+                    <text x="368" y="244">Token-Mediating</text>
+                    <text x="464" y="244">Backend</text>
+                    <text x="552" y="244">(J)</text>
+                    <text x="240" y="260">(D)</text>
+                    <text x="296" y="324">(B,I)</text>
+                    <text x="352" y="324">(C)</text>
+                    <text x="400" y="324">(E)</text>
+                    <text x="448" y="324">(G)</text>
+                    <text x="192" y="388">(A,H)</text>
+                    <text x="44" y="404">Static</text>
+                    <text x="88" y="404">Web</text>
+                    <text x="124" y="404">Host</text>
+                    <text x="400" y="404">Browser</text>
+                  </g>
+                </svg><a href="#section-6.2.1-1.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-oauth-20-tmb-pattern" class="selfRef">OAuth 2.0 TMB Pattern</a>
+            </figcaption></figure>
 </div>
 <p id="section-6.2.1-2">In this architecture, the JavaScript code is first loaded from a static web host into the browser (A), and the application then runs in the browser. The application checks with the token-mediating backend if there is an active session (B). If an active session is found, the application receives the corresponding access token, resumes its authenticated state, and skips forward to step J.<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.2.1-3">When no active session is found, the JavaScript application triggers a navigation to the token-mediating backend (C) to initiate the Authorization Code grant type with the PKCE extension (described in <a href="#pattern-tmb-flow" class="auto internal xref">Section 6.2.3.1</a>), to which the token-mediating backend responds by redirecting the browser to the authorization endpoint (D). When the user is redirected back, the browser delivers the authorization code to the token-mediating backend (E), where the token-mediating backend can then exchange it for tokens at the token endpoint (F) using its client credentials and PKCE code verifier.<a href="#section-6.2.1-3" class="pilcrow">¶</a></p>
@@ -2162,28 +2268,59 @@ extension (described in <a href="#pattern-bff-flow" class="auto internal xref">S
           <h4 id="name-application-architecture-3">
 <a href="#section-6.3.1" class="section-number selfRef">6.3.1. </a><a href="#name-application-architecture-3" class="section-name selfRef">Application Architecture</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-6.3.1-1">
-<pre>
-                      +---------------+           +--------------+
-                      |               |           |              |
-                      | Authorization |           |   Resource   |
-                      |    Server     |           |    Server    |
-                      |               |           |              |
-                      +---------------+           +--------------+
-
-                             ^     ^                 ^     +
-                             |     |                 |     |
-                             |(B)  |(C)              |(D)  |(E)
-                             |     |                 |     |
-                             |     |                 |     |
-                             +     v                 +     v
-
-+-----------------+         +-------------------------------+
-|                 |   (A)   |                               |
-| Static Web Host | +-----&gt; |           Browser             |
-|                 |         |                               |
-+-----------------+         +-------------------------------+
-</pre><a href="#section-6.3.1-1" class="pilcrow">¶</a>
+<span id="name-browser-based-oauth-20-clien"></span><div id="fig-bbapp-pattern-standalone">
+<figure id="figure-3">
+            <div id="section-6.3.1-1.1">
+              <div class="alignLeft art-svg artwork" id="section-6.3.1-1.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="336" width="520" viewBox="0 0 520 336" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                  <path d="M 8,256 L 8,320" fill="none" stroke="black"></path>
+                  <path d="M 152,256 L 152,320" fill="none" stroke="black"></path>
+                  <path d="M 184,32 L 184,112" fill="none" stroke="black"></path>
+                  <path d="M 232,256 L 232,320" fill="none" stroke="black"></path>
+                  <path d="M 240,144 L 240,224" fill="none" stroke="black"></path>
+                  <path d="M 288,144 L 288,224" fill="none" stroke="black"></path>
+                  <path d="M 312,32 L 312,112" fill="none" stroke="black"></path>
+                  <path d="M 392,32 L 392,112" fill="none" stroke="black"></path>
+                  <path d="M 432,144 L 432,224" fill="none" stroke="black"></path>
+                  <path d="M 480,144 L 480,224" fill="none" stroke="black"></path>
+                  <path d="M 488,256 L 488,320" fill="none" stroke="black"></path>
+                  <path d="M 512,32 L 512,112" fill="none" stroke="black"></path>
+                  <path d="M 184,32 L 312,32" fill="none" stroke="black"></path>
+                  <path d="M 392,32 L 512,32" fill="none" stroke="black"></path>
+                  <path d="M 184,112 L 312,112" fill="none" stroke="black"></path>
+                  <path d="M 392,112 L 512,112" fill="none" stroke="black"></path>
+                  <path d="M 8,256 L 152,256" fill="none" stroke="black"></path>
+                  <path d="M 232,256 L 488,256" fill="none" stroke="black"></path>
+                  <path d="M 168,288 L 216,288" fill="none" stroke="black"></path>
+                  <path d="M 8,320 L 152,320" fill="none" stroke="black"></path>
+                  <path d="M 232,320 L 488,320" fill="none" stroke="black"></path>
+                  <polygon class="arrowhead" points="488,224 476,218.4 476,229.6" fill="black" transform="rotate(90,480,224)"></polygon>
+                  <polygon class="arrowhead" points="440,144 428,138.4 428,149.6" fill="black" transform="rotate(270,432,144)"></polygon>
+                  <polygon class="arrowhead" points="296,224 284,218.4 284,229.6" fill="black" transform="rotate(90,288,224)"></polygon>
+                  <polygon class="arrowhead" points="296,144 284,138.4 284,149.6" fill="black" transform="rotate(270,288,144)"></polygon>
+                  <polygon class="arrowhead" points="248,144 236,138.4 236,149.6" fill="black" transform="rotate(270,240,144)"></polygon>
+                  <polygon class="arrowhead" points="224,288 212,282.4 212,293.6" fill="black" transform="rotate(0,216,288)"></polygon>
+                  <g class="text">
+                    <text x="248" y="68">Authorization</text>
+                    <text x="452" y="68">Resource</text>
+                    <text x="244" y="84">Server</text>
+                    <text x="452" y="84">Server</text>
+                    <text x="256" y="180">(B)</text>
+                    <text x="304" y="180">(C)</text>
+                    <text x="448" y="180">(D)</text>
+                    <text x="496" y="180">(E)</text>
+                    <text x="192" y="276">(A)</text>
+                    <text x="44" y="292">Static</text>
+                    <text x="88" y="292">Web</text>
+                    <text x="124" y="292">Host</text>
+                    <text x="352" y="292">Browser</text>
+                  </g>
+                </svg><a href="#section-6.3.1-1.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-browser-based-oauth-20-clien" class="selfRef">Browser-based OAuth 2.0 Client Pattern</a>
+            </figcaption></figure>
 </div>
 <p id="section-6.3.1-2">In this architecture, the JavaScript code is first loaded from a static web host into
 the browser (A), and the application then runs in the browser. In this scenario, the browser-based application is considered a public
@@ -2702,28 +2839,109 @@ as described in this document.<a href="#section-7.3-2" class="pilcrow">¶</a></p
         </h3>
 <p id="section-7.4-1">In an attempt to limit the attacker's ability to extract existing tokens or acquire a new set of tokens, a pattern using a Service Worker (<span>[<a href="#serviceworker" class="cite xref">serviceworker</a>]</span>) has been suggested in the past. In this pattern, the application's first action upon loading is registering a Service Worker. The Service Worker becomes responsible for executing the Authorization Code grant type to obtain tokens and to augment outgoing requests to the resource server with the proper access token. Additionally, the Service Worker blocks the client application's code from making direct calls to the authorization server's endpoints. This restrictions aims to target the attack scenario "Acquisition and Extraction of New Tokens" (<a href="#scenario-new-flow" class="auto internal xref">Section 5.1.3</a>).<a href="#section-7.4-1" class="pilcrow">¶</a></p>
 <p id="section-7.4-2">The sequence diagram included below illustrates the interactions between the client, the Service Worker, the authorization server, and the resource server.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-7.4-3">
-<pre>
-                                                                 Resource               Authorization
-  User       Application        Service Worker                    server                   server
-   |   browse     |                   |                              |                        |
-   | ------------&gt;|                   |                              |                        |
-   |              |-------------------&gt;                              |           /authorize   |
-   |              |                   --------------------------------------------------------&gt;
-   |              |                   |                 redirect w/ authorization code        |
-   |              |                   &lt; - - - - - - - - - - - - - - - - - - - - - - - - - - - |
-   |              |                   |                              |                        |
-   |              |                   |  token request w/ auth code  |               /token   |
-   |              |                   | ------------------------------------------------------&gt;
-   |              |                   | &lt;- - - - - - - - - - - - - - - - - - - - - - - - - - -|
-   |              |                   |                              |                        |
-   |              | resource request  |                              |                        |
-   |              |-------------------&gt; resource request with token  |                        |
-   |              |                   | ----------------------------&gt;|                        |
-   |              |                   |                              |                        |
-  User       Application        Service Worker                   Resource               Authorization
-                                                                  server                   server
-</pre><a href="#section-7.4-3" class="pilcrow">¶</a>
+<span id="name-oauth-20-service-worker-pat"></span><div id="fig-bbapp-pattern-serviceworker">
+<figure id="figure-4">
+          <div id="section-7.4-3.1">
+            <div class="alignLeft art-svg artwork" id="section-7.4-3.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="432" width="568" viewBox="0 0 568 432" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 16,64 L 16,368" fill="none" stroke="black"></path>
+                <path d="M 120,64 L 120,368" fill="none" stroke="black"></path>
+                <path d="M 224,64 L 224,368" fill="none" stroke="black"></path>
+                <path d="M 392,64 L 392,120" fill="none" stroke="black"></path>
+                <path d="M 392,168 L 392,216" fill="none" stroke="black"></path>
+                <path d="M 392,248 L 392,368" fill="none" stroke="black"></path>
+                <path d="M 512,64 L 512,368" fill="none" stroke="black"></path>
+                <path d="M 24,96 L 112,96" fill="none" stroke="black"></path>
+                <path d="M 128,112 L 216,112" fill="none" stroke="black"></path>
+                <path d="M 232,128 L 504,128" fill="none" stroke="black"></path>
+                <path d="M 232,224 L 504,224" fill="none" stroke="black"></path>
+                <path d="M 128,304 L 216,304" fill="none" stroke="black"></path>
+                <path d="M 232,352 L 384,352" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="512,224 500,218.4 500,229.6" fill="black" transform="rotate(0,504,224)"></polygon>
+                <polygon class="arrowhead" points="512,128 500,122.4 500,133.6" fill="black" transform="rotate(0,504,128)"></polygon>
+                <polygon class="arrowhead" points="392,352 380,346.4 380,357.6" fill="black" transform="rotate(0,384,352)"></polygon>
+                <polygon class="arrowhead" points="224,304 212,298.4 212,309.6" fill="black" transform="rotate(0,216,304)"></polygon>
+                <polygon class="arrowhead" points="224,112 212,106.4 212,117.6" fill="black" transform="rotate(0,216,112)"></polygon>
+                <polygon class="arrowhead" points="120,96 108,90.4 108,101.6" fill="black" transform="rotate(0,112,96)"></polygon>
+                <g class="text">
+                  <text x="224" y="36">Service</text>
+                  <text x="388" y="36">Resource</text>
+                  <text x="512" y="36">Authorization</text>
+                  <text x="20" y="52">User</text>
+                  <text x="128" y="52">Application</text>
+                  <text x="220" y="52">Worker</text>
+                  <text x="388" y="52">Server</text>
+                  <text x="508" y="52">Server</text>
+                  <text x="68" y="84">browse</text>
+                  <text x="460" y="116">/authorize</text>
+                  <text x="276" y="148">redirect</text>
+                  <text x="324" y="148">w/</text>
+                  <text x="392" y="148">authorization</text>
+                  <text x="468" y="148">code</text>
+                  <text x="232" y="164">&lt;</text>
+                  <text x="248" y="164">-</text>
+                  <text x="264" y="164">-</text>
+                  <text x="280" y="164">-</text>
+                  <text x="296" y="164">-</text>
+                  <text x="312" y="164">-</text>
+                  <text x="328" y="164">-</text>
+                  <text x="344" y="164">-</text>
+                  <text x="360" y="164">-</text>
+                  <text x="376" y="164">-</text>
+                  <text x="392" y="164">-</text>
+                  <text x="408" y="164">-</text>
+                  <text x="424" y="164">-</text>
+                  <text x="440" y="164">-</text>
+                  <text x="456" y="164">-</text>
+                  <text x="472" y="164">-</text>
+                  <text x="488" y="164">-</text>
+                  <text x="504" y="164">-</text>
+                  <text x="280" y="196">token</text>
+                  <text x="336" y="196">request</text>
+                  <text x="268" y="212">w/</text>
+                  <text x="300" y="212">auth</text>
+                  <text x="340" y="212">code</text>
+                  <text x="476" y="212">/token</text>
+                  <text x="232" y="244">&lt;</text>
+                  <text x="248" y="244">-</text>
+                  <text x="264" y="244">-</text>
+                  <text x="280" y="244">-</text>
+                  <text x="296" y="244">-</text>
+                  <text x="312" y="244">-</text>
+                  <text x="328" y="244">-</text>
+                  <text x="344" y="244">-</text>
+                  <text x="360" y="244">-</text>
+                  <text x="376" y="244">-</text>
+                  <text x="392" y="244">-</text>
+                  <text x="408" y="244">-</text>
+                  <text x="424" y="244">-</text>
+                  <text x="440" y="244">-</text>
+                  <text x="456" y="244">-</text>
+                  <text x="472" y="244">-</text>
+                  <text x="488" y="244">-</text>
+                  <text x="504" y="244">-</text>
+                  <text x="172" y="276">resource</text>
+                  <text x="168" y="292">request</text>
+                  <text x="276" y="324">resource</text>
+                  <text x="344" y="324">request</text>
+                  <text x="252" y="340">w/</text>
+                  <text x="292" y="340">access</text>
+                  <text x="344" y="340">token</text>
+                  <text x="20" y="388">User</text>
+                  <text x="128" y="388">Application</text>
+                  <text x="224" y="388">Service</text>
+                  <text x="388" y="388">Resource</text>
+                  <text x="512" y="388">Authorization</text>
+                  <text x="220" y="404">Worker</text>
+                  <text x="388" y="404">Server</text>
+                  <text x="508" y="404">Server</text>
+                </g>
+              </svg><a href="#section-7.4-3.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-oauth-20-service-worker-pat" class="selfRef">OAuth 2.0 Service Worker Pattern</a>
+          </figcaption></figure>
 </div>
 <p id="section-7.4-4">Note that this pattern never exposes the tokens to the application running in the browser. Since the Service Worker runs in an isolated execution environment, there is no shared memory and no way for the client application to influence the execution of the Service Worker.<a href="#section-7.4-4" class="pilcrow">¶</a></p>
 <div id="threat-analysis-5">

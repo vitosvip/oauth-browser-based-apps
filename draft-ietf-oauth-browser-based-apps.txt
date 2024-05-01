@@ -572,32 +572,34 @@ Table of Contents
 
 6.1.1.  Application Architecture
 
-                            +-------------+  +--------------+ +--------------+
-                            |             |  |              | |              |
-                            |Authorization|  |    Token     | |   Resource   |
-                            |  Endpoint   |  |   Endpoint   | |    Server    |
-                            |             |  |              | |              |
-                            +-------------+  +--------------+ +--------------+
+                       +---------------+      +----------+  +----------+
+                       |               |      |          |  |          |
+                       | Authorization |      |  Token   |  | Resource |
+                       |   Endpoint    |      | Endpoint |  |  Server  |
+                       |               |      |          |  |          |
+                       +---------------+      +----------+  +----------+
 
-                                ^                        ^              ^
-                                |                     (F)|           (K)|
-                                |                        v              v
-
-                                |         +-----------------------------------+
-                                |         |                                   |
-                                |         |    Backend for Frontend  (BFF)    |
-                             (D)|         |                                   |
-                                |         +-----------------------------------+
+                                ^                   ^            ^
+                                |                (F)|         (K)|
+                                |                   v            v
                                 |
-                                |           ^     ^     ^     +       ^  +
-                                |      (B,I)|  (C)|  (E)|  (G)|    (J)|  |(L)
-                                v           v     v     +     v       +  v
+                                |   +------------------------------+
+                                |   |                              |
+                                |   |  Backend for Frontend (BFF)  |
+                             (D)|   |                              |
+                                |   +------------------------------+
+                                |
+                                |       ^     ^     ^     +     ^  +
+                                |  (B,I)|  (C)|  (E)|  (G)|  (J)|  |(L)
+                                v       v     v     +     v     +  v
 
-+-----------------+         +-------------------------------------------------+
-|                 |  (A,H)  |                                                 |
-| Static Web Host | +-----> |                    Browser                      |
-|                 |         |                                                 |
-+-----------------+         +-------------------------------------------------+
+ +-----------------+         +-----------------------------------------+
+ |                 |  (A,H)  |                                         |
+ | Static Web Host | +-----> |                 Browser                 |
+ |                 |         |                                         |
+ +-----------------+         +-----------------------------------------+
+
+                    Figure 1: OAuth 2.0 BFF Pattern
 
    In this architecture, the JavaScript code is first loaded from a
    static web host into the browser (A), and the application then runs
@@ -1051,32 +1053,34 @@ Table of Contents
 
 6.2.1.  Application Architecture
 
-                            +-------------+  +--------------+ +--------------+
-                            |             |  |              | |              |
-                            |Authorization|  |    Token     | |   Resource   |
-                            |  Endpoint   |  |   Endpoint   | |    Server    |
-                            |             |  |              | |              |
-                            +-------------+  +--------------+ +--------------+
+                       +---------------+      +----------+  +----------+
+                       |               |      |          |  |          |
+                       | Authorization |      |  Token   |  | Resource |
+                       |   Endpoint    |      | Endpoint |  |  Server  |
+                       |               |      |          |  |          |
+                       +---------------+      +----------+  +----------+
 
-                                ^                   ^                 ^
-                                |                (F)|                 |
-                                |                   v                 |
-                                                                      |
-                                |   +-----------------------+         |
-                                |   |                       |         |
-                                |   |Token-Mediating Backend|         | (J)
-                             (D)|   |                       |         |
-                                |   +-----------------------+         |
-                                |                                     |
-                                |       ^     ^     ^     +           |
-                                |  (B,I)|  (C)|  (E)|  (G)|           |
-                                v       v     v     +     v           v
+                                ^                   ^              ^
+                                |                (F)|              |
+                                |                   v              |
+                                |                                  |
+                                |   +---------------------------+  |
+                                |   |                           |  |
+                                |   |  Token-Mediating Backend  |  |(J)
+                             (D)|   |                           |  |
+                                |   +---------------------------+  |
+                                |                                  |
+                                |       ^     ^     ^     +        |
+                                |  (B,I)|  (C)|  (E)|  (G)|        |
+                                v       v     v     +     v        v
 
-+-----------------+         +-------------------------------------------------+
-|                 |  (A,H)  |                                                 |
-| Static Web Host | +-----> |                    Browser                      |
-|                 |         |                                                 |
-+-----------------+         +-------------------------------------------------+
+ +-----------------+         +-----------------------------------------+
+ |                 |  (A,H)  |                                         |
+ | Static Web Host | +-----> |                 Browser                 |
+ |                 |         |                                         |
+ +-----------------+         +-----------------------------------------+
+
+                    Figure 2: OAuth 2.0 TMB Pattern
 
    In this architecture, the JavaScript code is first loaded from a
    static web host into the browser (A), and the application then runs
@@ -1380,12 +1384,12 @@ Table of Contents
 
 6.3.1.  Application Architecture
 
-                         +---------------+           +--------------+
-                         |               |           |              |
-                         | Authorization |           |   Resource   |
-                         |    Server     |           |    Server    |
-                         |               |           |              |
-                         +---------------+           +--------------+
+                         +---------------+         +--------------+
+                         |               |         |              |
+                         | Authorization |         |   Resource   |
+                         |    Server     |         |    Server    |
+                         |               |         |              |
+                         +---------------+         +--------------+
 
                                 ^     ^                 ^     +
                                 |     |                 |     |
@@ -1399,6 +1403,8 @@ Table of Contents
    | Static Web Host | +-----> |           Browser             |
    |                 |         |                               |
    +-----------------+         +-------------------------------+
+
+              Figure 3: Browser-based OAuth 2.0 Client Pattern
 
    In this architecture, the JavaScript code is first loaded from a
    static web host into the browser (A), and the application then runs
@@ -2029,25 +2035,32 @@ Table of Contents
    between the client, the Service Worker, the authorization server, and
    the resource server.
 
-                                                                 Resource               Authorization
-  User       Application        Service Worker                    server                   server
-   |   browse     |                   |                              |                        |
-   | ------------>|                   |                              |                        |
-   |              |------------------->                              |           /authorize   |
-   |              |                   -------------------------------------------------------->
-   |              |                   |                 redirect w/ authorization code        |
-   |              |                   < - - - - - - - - - - - - - - - - - - - - - - - - - - - |
-   |              |                   |                              |                        |
-   |              |                   |  token request w/ auth code  |               /token   |
-   |              |                   | ------------------------------------------------------>
-   |              |                   | <- - - - - - - - - - - - - - - - - - - - - - - - - - -|
-   |              |                   |                              |                        |
-   |              | resource request  |                              |                        |
-   |              |-------------------> resource request with token  |                        |
-   |              |                   | ---------------------------->|                        |
-   |              |                   |                              |                        |
-  User       Application        Service Worker                   Resource               Authorization
-                                                                  server                   server
+                          Service             Resource     Authorization
+  User      Application   Worker               Server         Server
+   |            |            |                    |              |
+   |   browse   |            |                    |              |
+   |----------->|            |                    |              |
+   |            |----------->|                    |   /authorize |
+   |            |            |---------------------------------->|
+   |            |            |  redirect w/ authorization code   |
+   |            |            |< - - - - - - - - - - - - - - - - -|
+   |            |            |                    |              |
+   |            |            |    token request   |              |
+   |            |            |    w/ auth code    |       /token |
+   |            |            |---------------------------------->|
+   |            |            |< - - - - - - - - - - - - - - - - -|
+   |            |            |                    |              |
+   |            |  resource  |                    |              |
+   |            |  request   |                    |              |
+   |            |----------->|                    |              |
+   |            |            |  resource request  |              |
+   |            |            |  w/ access token   |              |
+   |            |            |------------------->|              |
+   |            |            |                    |              |
+  User      Application   Service             Resource     Authorization
+                          Worker               Server         Server
+
+              Figure 4: OAuth 2.0 Service Worker Pattern
 
    Note that this pattern never exposes the tokens to the application
    running in the browser.  Since the Service Worker runs in an isolated
