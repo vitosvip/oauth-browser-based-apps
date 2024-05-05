@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-05-02T00:04:59.834830+00:00",
+  "timestamp": "2024-05-05T00:05:01.300889+00:00",
   "repo": "oauth-wg/oauth-browser-based-apps",
   "labels": [
     {
@@ -599,6 +599,30 @@
       "updatedAt": "2024-05-01T17:09:49Z",
       "closedAt": "2024-05-01T17:09:49Z",
       "comments": []
+    },
+    {
+      "number": 51,
+      "id": "I_kwDOCUe3lM6HshJ2",
+      "title": "Working Group Last Call",
+      "url": "https://github.com/oauth-wg/oauth-browser-based-apps/issues/51",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "This is a placeholder issue for working group last call comments. If you have any minor comments, feel free to add them below. If you have reviewed the draft and have no comments, please note below that you are happy with the current draft! If you have any substantial comments, feel free to open them as a new issue.",
+      "createdAt": "2024-05-02T22:15:55Z",
+      "updatedAt": "2024-05-03T07:36:21Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "rossajmcd",
+          "authorAssociation": "NONE",
+          "body": "Looks good to me, thanks for all the hard work.",
+          "createdAt": "2024-05-03T07:36:20Z",
+          "updatedAt": "2024-05-03T07:36:20Z"
+        }
+      ]
     }
   ],
   "pulls": [
