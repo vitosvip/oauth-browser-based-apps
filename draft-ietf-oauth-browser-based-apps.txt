@@ -5,10 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Best Current Practice                          D. Waite
-Expires: 2 November 2024                                   Ping Identity
+Expires: 7 November 2024                                   Ping Identity
                                                               P. De Ryck
                                                   Pragmatic Web Security
-                                                              1 May 2024
+                                                              6 May 2024
 
 
                 OAuth 2.0 for Browser-Based Applications
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 November 2024.
+   This Internet-Draft will expire on 7 November 2024.
 
 Copyright Notice
 
@@ -2497,7 +2497,7 @@ Table of Contents
    [CSP3]     West, M., "Content Security Policy", October 2018,
               <https://www.w3.org/TR/CSP3/>.
 
-   [DPoP]     Fett, D., Cambpell, B., Bradley, J., Lodderstedt, T.,
+   [DPoP]     Fett, D., Campbell, B., Bradley, J., Lodderstedt, T.,
               Jones, M., and D. Waite, "Demonstrating Proof-of-
               Possession at the Application Layer", n.d.,
               <https://datatracker.ietf.org/doc/html/draft-ietf-oauth-
@@ -2524,7 +2524,7 @@ Table of Contents
    [Site]     Contributors, M., "Site", n.d.,
               <https://developer.mozilla.org/en-US/docs/Glossary/Site>.
 
-   [tmi-bff]  Bertocci, V. and B. Cambpell, "Token Mediating and session
+   [tmi-bff]  Bertocci, V. and B. Campbell, "Token Mediating and session
               Information Backend For Frontend", April 2021,
               <https://datatracker.ietf.org/doc/html/draft-bertocci-
               oauth2-tmi-bff-01>.
