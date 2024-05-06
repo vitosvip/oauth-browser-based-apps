@@ -210,7 +210,7 @@ Table of Contents
    found in [oauth-security-topics].
 
    In recent years, widespread adoption of Cross-Origin Resource Sharing
-   (CORS) ([Fetch]), which enables exceptions to the same-origin policy,
+   (CORS) [Fetch], which enables exceptions to the same-origin policy,
    allows browser-based applications to use the OAuth 2.0 Authorization
    Code grant type and make a POST request to exchange the authorization
    code for an access token at the token endpoint.  Since the
@@ -399,8 +399,8 @@ Table of Contents
    that counter this attack scenario.  Short access token lifetimes and
    refresh token rotation are ineffective, since the attacker has a
    fresh, independent set of tokens.  Advanced security mechanism, such
-   as DPoP ([RFC9449]) are equally ineffective, since the attacker can
-   use their own key pair to setup and use DPoP for the newly obtained
+   as DPoP [RFC9449] are equally ineffective, since the attacker can use
+   their own key pair to setup and use DPoP for the newly obtained
    tokens.  Requiring user interaction with every Authorization Code
    flow would effectively stop the automatic silent issuance of new
    tokens, but this would significantly impact widely-established
@@ -436,9 +436,8 @@ Table of Contents
    This attack pattern is well-known and also occurs with traditional
    applications using HttpOnly session cookies.  It is commonly accepted
    that this scenario cannot be stopped or prevented by application-
-   level security measures.  For example, the DPoP specification
-   ([RFC9449]) explicitly considers this attack scenario to be out of
-   scope.
+   level security measures.  For example, DPoP [RFC9449] explicitly
+   considers this attack scenario to be out of scope.
 
 5.2.  Attack Consequences
 
@@ -1711,7 +1710,7 @@ Table of Contents
 
 6.3.4.2.2.  Using Sender-Constrained Tokens
 
-   Browser-based OAuth clients can implement DPoP ([RFC9449]) to
+   Browser-based OAuth clients can implement DPoP [RFC9449] to
    transition from bearer access tokens and bearer refresh tokens to
    sender-constrained tokens.  In such an implementation, the private
    key used to sign DPoP proofs is handled by the browser (a non-
@@ -2377,7 +2376,7 @@ Table of Contents
    tokens can be used to enhance the security of both access tokens and
    refresh tokens.  One method of implementing sender-constrained tokens
    in a way that is usable from browser-based applications is DPoP
-   ([RFC9449]).
+   [RFC9449].
 
    When using sender-constrained tokens, the OAuth client has to prove
    possession of a private key in order to use the token, such that the
