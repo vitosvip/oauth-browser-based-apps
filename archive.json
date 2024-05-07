@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-05-05T00:05:01.300889+00:00",
+  "timestamp": "2024-05-07T00:04:38.906067+00:00",
   "repo": "oauth-wg/oauth-browser-based-apps",
   "labels": [
     {
@@ -623,6 +623,22 @@
           "updatedAt": "2024-05-03T07:36:20Z"
         }
       ]
+    },
+    {
+      "number": 52,
+      "id": "I_kwDOCUe3lM6IAiJv",
+      "title": "Fragments, performance, and historic notes.",
+      "url": "https://github.com/oauth-wg/oauth-browser-based-apps/issues/52",
+      "state": "OPEN",
+      "author": "will-bartlett",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In 7.2.1, \"historic note\", the current draft says:\r\n\r\n> Historically, the Implicit grant type provided an advantage to browser-based applications since JavaScript could always arbitrarily read and manipulate the fragment portion of the URL without triggering a page reload. This was necessary in order to remove the access token from the URL after it was obtained by the app.\r\n\r\n> [...] Modern browsers now have the Session History API [...] which provides a mechanism to modify the path and query string component of the URL without triggering a page reload.\r\n\r\nThe historic note is missing some context. Had RFC 6749 recommended query responses for browser-based apps, there would have been the additional page load AND an additional app download. Additionally, the document as a whole makes no mention of `response_type=fragment`. \r\n\r\nConsider the following sequence of requests (\"the authorization code flow\"):\r\n 1. User navigates to https://contoso.com/\r\n 2. Contoso redirects the user to the OAuth provider https://oauth.example/authorize?parameters.\r\n 3. The OAuth provider navigates back to Contoso with https://contoso.com?code=foobar\r\n 4. Contoso clears the code from the URL bar, navigating to https://contoso.com\r\n\r\nWhen RFC 6749 was published, this flow would have included:\r\n - Three navigations (1=>2, 2=>3, 3=>4)\r\n - Two downloads of the browser-based application (1 and 3) - 4 would have hit the cache entry created by 1.\r\n\r\nCompare to the implicit flow:\r\n 1. User navigates to https://contoso.com/\r\n 2. Contoso redirects the user to the OAuth provider https://oauth.example/authorize?parameters.\r\n 3. The OAuth provider navigates back to Contoso with https://contoso.com#token=foobar\r\n 4. Contoso clears the code from the URL bar, navigating to https://contoso.com\r\n\r\nWhen RFC 6749 was published, this flow would have included:\r\n - Two navigations (1=>2, 2=>3)\r\n - One download of the browser-based application (1) - 3 would have hit the cache entry created by 1, and 4 does not create a network request.\r\n\r\nThe document as it currently stands seems to recommend the authorization code flow as described by RFC 6749 (with query response). In today's world, that flow includes:\r\n - Two navigations (1=>2, 2=>3)\r\n - Two downloads of the browser-based application (1 and 3) - 4 does not make a network request.\r\n\r\nMicrosoft Entra (and other OpenID Connect providers) rely on the [OAuth 2.0 Multiple Response Type Encoding Practices\r\n](https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html) standard and use the authorization code flow in combination with response_mode=fragment. That looks like this:\r\n 1. User navigates to https://contoso.com/\r\n 2. Contoso redirects the user to the OAuth provider https://oauth.example/authorize?parameters.\r\n 3. The OAuth provider navigates back to Contoso with https://contoso.com#code=foobar\r\n 4. Contoso clears the code from the URL bar, navigating to https://contoso.com\r\n\r\nThis flow includes:\r\n - Two navigations (1=>2, 2=>3)\r\n - One download of the browser-based application (1) - 3 would have hit the cache entry created by 1, and 4 does not create a network request.\r\n\r\nProblem summary:\r\n 1. The document as it currently stands (without mention of response_mode=fragment) recommends a version of OAuth for browser-based apps that is less performant than the implicit flow recommended by RFC 6749.\r\n 2. The historic note only mentions one of the two reasons RFC 6479 recommended the implicit flow for browser based apps. Those two reasons are: reduced navigations AND reduced downloading.\r\n\r\nSuggestions:\r\n - The document should definitely mention response_mode=fragment. The document should probably either recommend or recommend against response_mode=fragment (I think: recommend).\r\n - The historic note should explain both the motivations for the implicit flow and why neither applies (session history AND response_mode=fragment). ",
+      "createdAt": "2024-05-06T21:48:50Z",
+      "updatedAt": "2024-05-06T21:49:00Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
