@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-05-30T00:05:15.443045+00:00",
+  "timestamp": "2024-06-02T00:05:04.461537+00:00",
   "repo": "oauth-wg/oauth-browser-based-apps",
   "labels": [
     {
@@ -659,6 +659,51 @@
           "body": "Hi @will-bartlett just wanted to check on this again",
           "createdAt": "2024-05-20T15:14:02Z",
           "updatedAt": "2024-05-20T15:14:02Z"
+        }
+      ]
+    },
+    {
+      "number": 53,
+      "id": "I_kwDOCUe3lM6KnLp5",
+      "title": "Discussing the usage of localStorage/sessionStorage for session management",
+      "url": "https://github.com/oauth-wg/oauth-browser-based-apps/issues/53",
+      "state": "OPEN",
+      "author": "randomstuff",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The BFF and the Token Mediating pattern assume that *cookies* are used for user session tracking:\r\n\r\n> The BFF relies on traditional browser cookies to keep track of the user's session, which is used to access the user's tokens.\r\n\r\n> Similar to the BFF, the token-mediating backend relies on traditional browser cookies to keep track of the user's session.\r\n\r\nSome applications (SPAs) might want to rely on storing a session token in `localStorage`/`sessionStorage` and use `Authorization: Bearer` for passing the session token to the backend. Should some wording discussing this be included?\r\n\r\nThis is only discussed in the context of the storage of the access/refresh tokens in the browser (for the token mediating backed and browser-based OAuth 2.0 client patterns).",
+      "createdAt": "2024-05-30T12:11:26Z",
+      "updatedAt": "2024-05-31T07:24:45Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "philippederyck",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Only by using cookies as discussed in the document can you get the security guarantees offered by the BFF. Making the BFF session data accessible to JavaScript would negate the majority of the security benefits of the BFF. There would also be little to no technical reason to do this, since cookies are universally supported by browsers and do not require any code. ",
+          "createdAt": "2024-05-30T15:40:19Z",
+          "updatedAt": "2024-05-30T15:40:19Z"
+        },
+        {
+          "author": "randomstuff",
+          "authorAssociation": "NONE",
+          "body": "> Only by using cookies as discussed in the document can you get the security guarantees offered by the BFF.\r\n\r\n> The BFF interacts with the authorization server as a confidential OAuth client\r\n\r\nThe client credentials are still not exposed to the user agent and the client.\r\n\r\n> The BFF manages OAuth access and refresh tokens in the context of a cookie-based session, avoiding the direct exposure of any tokens to the JavaScript application\r\n\r\nYou still wouldn't expose the OAuth access/refresh tokens which would otherwise be visible by the frontend (i.e. by the frontend code and by the actual end user).\r\n\r\n> There would also be little to no technical reason to do this, since cookies are universally supported by browsers and do not require any code.\r\n\r\nHttpOnly cookies are isolated from frontend JavaScript and therefore protected from exfiltration through XSS. However, they are are (still) not origin-bound which makes them vulnerable from cross-origin/same-domain injection (such as session fixation).\r\n\r\n* You can use `__Host-` cookies to protect against cross-origin/same-domain cookie injection but this is very rarely used in practice <del>and would not work if the frontend and the backend are in different origins</del>.\r\n* You can use `__Secure-` cookies to protect against cookie injection from non-secured origins in the same domain.\r\n\r\nlocalStorage is origin-bound and is inherently protected from these things.\r\n\r\nI'm not sure that this would really negate the majority of the security benefits of the BFF.",
+          "createdAt": "2024-05-30T16:43:07Z",
+          "updatedAt": "2024-05-30T21:00:15Z"
+        },
+        {
+          "author": "philippederyck",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> The client credentials are still not exposed to the user agent and the client.\r\n> \r\n> You still wouldn't expose the OAuth access/refresh tokens which would otherwise be visible by the frontend (i.e. by the frontend code and by the actual end user).\r\n\r\nYes, that's true, but the security properties are still worse than having a cookie-based BFF solution. As described in the spec, the BFF reduces the attack surface to a *client hijacking* attack (in an __online__ fashion, where the attack only works as long as the application is active). By having the session accessible to the frontend (and thus malicious JS), you would enable a scenario that is best described as __offline__ client hijacking. The attacker would be able to steal the BFF's session data and abuse it for as long as the session is active, even after the user has closed the application (but not logged out).\r\n\r\nI would even say that the security properties of this setup are worse than using the Token Mediating Backend, since the BFF session is likely longer-lived than the access tokens in a Token Mediating Backend solution. \r\n\r\nConcretely, I don't think this pattern improves anything or warrants a recommendation.\r\n\r\n\r\n> > There would also be little to no technical reason to do this, since cookies are universally supported by browsers and do not require any code.\r\n> \r\n> HttpOnly cookies are isolated from frontend JavaScript and therefore protected from exfiltration through XSS. However, they are are (still) not origin-bound which makes them vulnerable from cross-origin/same-domain injection (such as session fixation).\r\n> \r\n> * You can use `__Host-` cookies to protect against cross-origin/same-domain cookie injection but this is very rarely used in practice ~and would not work if the frontend and the backend are in different origins~.\r\n> * You can use `__Secure-` cookies to protect against cookie injection from non-secured origins in the same domain.\r\n> \r\n> localStorage is origin-bound and is inherently protected from these things.\r\n> \r\n> I'm not sure that this would really negate the majority of the security benefits of the BFF.\r\n\r\nI don't think these statements help prove your point. I will list a couple of reasons below:\r\n\r\n- The `__Host-` prefix is explicitly recommended by the spec. The fact that it is not often used does not impact its security properties.\r\n- The `__Host-` prefix explicitly prevents setting a cookie from a different domain (i.e., it neutralizes the `Domain` attribute and effectively prevents subdomain-based session fixation)\r\n- Nothing prevents the use of the `__Host-` prefix from being used between two different origins or even domains. The SameSite flag can affect this, and so does third-party cookie blocking, but not the `__Host-` prefix.\r\n- A cookie configured with `__Host-` also requires the `Secure` flag, making them mostly origin-bound (to be precise: ports are part of the origin and are not taken into account with this prefix, but most real-world deployments rely on default ports anyway)\r\n\r\nIf you are not convinced that I am right, I encourage you to try this out in an actual deployment, to help you understand the precise browser behavior. \r\n",
+          "createdAt": "2024-05-31T04:20:04Z",
+          "updatedAt": "2024-05-31T04:20:04Z"
+        },
+        {
+          "author": "randomstuff",
+          "authorAssociation": "NONE",
+          "body": "> Concretely, I don't think this pattern improves anything or warrants a recommendation.\r\n\r\nNote that stating this explicitly would actually count as \"discussing the usage of localStorage/sessionStorage for session management\" :) I mean, people will wonder about this and will want to try to implement these patterns using localStorage instead of cookies. It might be a good idea to mention these arguments in a short paragraph (?).\r\n\r\n> If you are not convinced that I am right, I encourage you to try this out in an actual deployment, to help you understand the precise browser behavior.\r\n\r\nYes agreed.\r\n",
+          "createdAt": "2024-05-31T07:24:44Z",
+          "updatedAt": "2024-05-31T07:24:44Z"
         }
       ]
     }
